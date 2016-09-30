@@ -21,4 +21,4 @@ render((
 	  	<Route path="/Edit" component={EditRecipeMain} />
 	  </Route>
 	</Router>
-), document.getElementById('app')); 
+), document.getElementById('app'));
