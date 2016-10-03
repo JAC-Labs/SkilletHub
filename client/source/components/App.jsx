@@ -118,14 +118,13 @@ class App extends React.Component {
   *****************    SIGN UP A NEW USER    ******************
   ************************************************************/
   signUpUser (user) {
-    // event.preventDefault();
-    // debugger;
     console.log('signing up user');
     console.log('username: ', user.username);
     console.log('username: ', user.password);
     console.log('firstname: ', user.firstname);
     console.log('lastname: ', user.lastname);
     console.log('email: ', user.email);
+
     var poolConfig = {
       UserPoolId: USER_POOL_ID,
       ClientId: USER_POOL_APP_CLIENT_ID
@@ -194,7 +193,8 @@ class App extends React.Component {
           });
         },
         onFailure: function(error) {
-          console.log('Error authenticating user: ', error);
+          console.log('Error authenticating user: ' + error);
+          alert(error);
         }
       });
       // console.log('sign up successful: ', cognitoUser);
@@ -217,8 +217,8 @@ class App extends React.Component {
     }
     var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool(poolConfig);
     var userData = {
-        Username: user.username,
-        Pool: userPool
+      Username: user.username,
+      Pool: userPool
     };
     var cognitoUser = new AWS.CognitoIdentityServiceProvider.CognitoUser(userData);
     console.log('cognitoUser is: ', cognitoUser);
@@ -239,19 +239,20 @@ class App extends React.Component {
         console.log('auth success result: ', result);
 
         cognitoUser.getUserAttributes(function(error, result) {
-          if (error) { 
-            console.log('error in getUserAttributes: ', error); 
-          }
+          if (error) {console.log('error in getUserAttributes: ', error);}
           else { 
             var userID = result[0].Value;
             setUserState(userID, token); 
           }
         });
+
       },
       onFailure: function(error) {
         console.log('Error authenticating user: ', error);
+        alert(error);
       }
     });
+    this.getListOfAllUsers();
   };
 
   /************************************************************
@@ -285,6 +286,30 @@ class App extends React.Component {
     //redirect to the landing page after logging out
     browserHistory.push('/');
   };
+
+  /************************************************************
+  /******************    GET ALL USERS    *********************
+  ************************************************************/
+  // getListOfAllUsers() {
+  //   var poolData = { 
+  //     UserPoolId: USER_POOL_ID,
+  //     ClientId: USER_POOL_APP_CLIENT_ID
+  //   };
+  //   var userPool = new AWS.CognitoIdentityServiceProvider.CognitoUserPool(poolData);
+  //   var options = {
+  //     "AttributesToGet": [ "username" ],
+  //     "UserPoolId": USER_POOL_ID
+  //   };
+  //   userPool.listUsers(options, {
+  //     onSuccess: function(result) {
+  //       console.log('result in getListUsers: ', result);
+  //     },
+  //     onError: function(error) {
+  //       console.log('error in getListUsers: ', error);
+  //     }
+  //   });
+  // };
+
 
   /************************************************************
   /****************    RENDER COMPONENTS    *******************

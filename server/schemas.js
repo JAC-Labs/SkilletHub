@@ -47,7 +47,7 @@ let recipeSchema = new Schema({
   //   amount: Number,               //OPTIONAL: Amount of ingredient
   //   unit: String,                 //OPTIONAL: Unit of ingredient (cups, tbsp, etc)
   //   prep: String,                 //OPTIONAL: Preperation of ingredient (chopped, diced)
-  //   substitutes: [String],         //Optional: Substitute ingredients for that ingredient
+  //   substitutes: [String],        //Optional: Substitute ingredients for that ingredient
   //   optional: Boolean             //Whether ingredient is necessary
   // }],
   steps: Schema.Types.Mixed,
@@ -96,9 +96,20 @@ let tagSchema = new Schema({
 }); 
 
 let issueSchema = new Schema({
-  username: String,                       //User who left issue
+  username: String,                     //User who left issue
   description: String,                  //Description of the problem / issue
   step: Number                          //Optional: Step in the recipe that had issue
+}); 
+
+let userSchema = new Schema({
+  username: String,                     // Username 
+  firstname: String,                    // First name
+  lastname: String,                     // Last Name
+  email: String,                        // email address
+  createdAt: String,                    // Timestamp
+  bio: String,                          // Optional: user can edit profile page
+  picture: String,                      // Optional: url of hosted picture
+  token: String                         // Session token from AWS Cognito
 }); 
 
 module.exports = {
@@ -106,5 +117,6 @@ module.exports = {
   UserRecipe: mongoose.model('UserRecipe', userRecipeSchema),
   Dependency: mongoose.model('Dependency', dependencySchema),
   Tag: mongoose.model('Tag', tagSchema),
-  Issue: mongoose.model('Issue', issueSchema)
+  Issue: mongoose.model('Issue', issueSchema),
+  User: mongoose.model('User', userSchema)
 };
