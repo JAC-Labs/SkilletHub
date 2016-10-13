@@ -79,7 +79,6 @@ class NavigationBar extends React.Component {
             <FormControl type='text' id='search' onChange={this.handleChange.bind(this)} placeholder='Search for Recipes' style={{width: '200px', height: '30px', textAlign: 'center'}}/>
             <Button type="submit" onSubmit={this.handleSearch.bind(this)} onClick={this.handleSearch.bind(this)} style={{height: '30px', paddingBottom: '4px'}}>Search</Button>  
           </FormGroup>
-
           <Button type="submit" onSubmit={this.handleLogout.bind(this)} onClick={this.handleLogout.bind(this)} style={{margin: 5, height: '30px', paddingBottom: '4px', marginLeft: '20px'}}>Log Out</Button>
         </Navbar.Form>
       )
@@ -89,40 +88,23 @@ class NavigationBar extends React.Component {
   render() {
     return (
         <Navbar style={{'marginBottom': '2px', height: '40px'}}>
-
           <Navbar.Header>
             <Navbar.Brand>
               <a>SkilletHub</a>
             </Navbar.Brand>
             <Navbar.Toggle />
           </Navbar.Header>
-
           <Navbar.Collapse>
-            
             <Nav>
               <NavItem onClick={this.props.handleNavigation.bind(this)} title={'/User'}> Profile </NavItem>
               <NavItem onClick={this.props.handleNavigation.bind(this)} title={'/Create'}> Create Recipe </NavItem>
               <NavItem onClick={this.props.handleNavigation.bind(this)} title={'/Explore'}> Explore </NavItem>
             </Nav>
-
             {this._renderAuthentication()}
-
           </Navbar.Collapse>
-
         </Navbar>
     ); 
   }
 }
 
 export default NavigationBar; 
-
-
-
-
-/*
-
-<NavItem title={'/Recipe'} style={{fontSize: '10px'}}> Recipe </NavItem>
-<NavItem title={'/Edit'} style={{fontSize: '10px'}}> Edit Recipe </NavItem>
-<NavItem title={'/Pull'} style={{fontSize: '10px'}}> Pull Request </NavItem>
-
-*/

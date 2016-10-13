@@ -5,6 +5,7 @@ import { Router, IndexRoute, Route, browserHistory } from 'react-router';
 
 // Importing the React components from components folder
 import App from './components/App';
+import Auth from './components/Auth/Auth';
 import LandingPage from './components/LandingPage';
 import User from './components/User/UserPage';
 import RecipeMain from './components/Recipe/RecipeMain'; 
