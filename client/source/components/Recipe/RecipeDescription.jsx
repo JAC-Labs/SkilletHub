@@ -25,7 +25,7 @@ export default ({recipeDescription, handleClick}) => {
           </Col>
         </Row> 
         <Row> 
-          <p> {recipeDescription.description.value || `A basic ${recipeDescription.name} recipe`} </p> 
+          <p> {recipeDescription.description.value || `A basic ${recipeDescription.name.value} recipe`} </p> 
         </Row>
         </div>
   ); 

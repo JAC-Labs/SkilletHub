@@ -287,7 +287,7 @@ class RecipeMain extends Component {
         <Row>
           <Col xs={5} md={5}>
             <Well>
-              <img style={{height: 300, borderRadius: 10}} src={this.state.recipe.picture.value} alt={'picture of food'}/>
+              <img style={{height: 300, maxWidth: 340, borderRadius: 10}} src={this.state.recipe.picture.value} alt={'picture of food'}/>
             </Well>
           </Col>
           <Col xs={7} md={7}>
