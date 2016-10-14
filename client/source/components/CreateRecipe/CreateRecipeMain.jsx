@@ -55,8 +55,8 @@ class CreateRecipeMain extends Component {
     if (inputType === 'skill'){
       this.setState({skillLevel: event.target.value}); 
     } 
-    if (inputType === 'image'){
-      this.setState({image: event.target.value}); 
+    if (inputType === 'picture'){
+      this.setState({picture: event.target.value}); 
     } 
     if (inputType === 'tags'){
       var tags = this.state.tags;
@@ -81,95 +81,6 @@ class CreateRecipeMain extends Component {
     console.log(step);
     steps.push(step); 
     this.setState({ steps: steps }); 
-  }
-
-  // handleClick (event) {
-  //   console.log('Clicked on button!'); 
-  // }
-
-  // _renderRecipeObjects(recipe) {
-  //   var keys = Object.keys(recipe); 
-  //   var testString = keys.map((property) => {
-  //     return `${property}: ${recipe[property]}`; 
-  //   }); 
-  //   return (
-  //     testString.map((property, i) => (
-  //       <h4 key={'test' + i}> {property} </h4>
-  //     ))
-  //   )
-  // }
-
-  createMeatloaf(event){
-    event.preventDefault(); 
-
-    var recipeObject = meatloafRecipe; 
-
-    var requestUsername = this.props.username; 
-
-    console.log(recipeObject.name); 
-    console.log(Object.keys(recipeObject));
-    console.log('recipeObject: ', recipeObject);  
-
-    axios.post(`/${requestUsername}/create-recipe`, { 
-      recipeObject
-    })
-    .then(function(response) {
-      console.log('RESPONSE FROM CREATE MEATLOAF: ', response); 
-      browserHistory.push(`/User/${requestUsername}`);
-    })
-    .catch(function(error) {
-      console.log(error); 
-    }); 
-
-  }
-
-  createWellington(event){
-    event.preventDefault(); 
-
-    var recipeObject = wellingtonRecipe; 
-    // console.log(recipeObject); 
-
-    var requestUsername = this.props.username; 
-
-    console.log(recipeObject.name); 
-    console.log(Object.keys(recipeObject));
-    console.log('recipeObject: ', recipeObject);  
-
-    axios.post(`/${requestUsername}/create-recipe`, { 
-      recipeObject
-    })
-    .then(function(response) {
-      console.log('RESPONSE FROM CREATE MEATLOAF: ', response); 
-      browserHistory.push(`/User/${requestUsername}`);
-    })
-    .catch(function(error) {
-      console.log(error); 
-    }); 
-
-  }
-
-  createNachos(event){
-    event.preventDefault(); 
-
-    var recipeObject = nachosRecipe; 
-
-    var requestUsername = this.props.username; 
-
-    console.log(recipeObject.name); 
-    console.log(Object.keys(recipeObject));
-    console.log('recipeObject: ', recipeObject);  
-
-    axios.post(`/${requestUsername}/create-recipe`, { 
-      recipeObject
-    })
-    .then(function(response) {
-      console.log('RESPONSE FROM CREATE MEATLOAF: ', response); 
-      browserHistory.push(`/User/${requestUsername}`);
-    })
-    .catch(function(error) {
-      console.log(error); 
-    }); 
-
   }
 
   createRecipeObject(event){
@@ -218,34 +129,31 @@ class CreateRecipeMain extends Component {
     return (
       <Grid> 
       <h3> Recipe </h3>
-      <Button onClick={this.createRecipeObject.bind(this)}> Create Recipe </Button> 
-      <Button onClick={this.createMeatloaf.bind(this)}> Create Meatloaf </Button> 
-      <Button onClick={this.createWellington.bind(this)}> Create Wellington </Button> 
-      <Button onClick={this.createNachos.bind(this)}> Create Nachos </Button> 
+        <Button onClick={this.createRecipeObject.bind(this)}> Create Recipe </Button> 
       <Row>
         <Col xs={4} md={4}> 
-            <form>
-              <FormGroup style={{padding: 5}}>
-              <ControlLabel> Recipe Name </ControlLabel>
-              <FormControl type="text" id="name" onChange={this.handleChange.bind(this)} value={this.state.name} required/>
-              </FormGroup>
-            </form>
+          <form>
+            <FormGroup style={{padding: 5}}>
+            <ControlLabel> Recipe Name </ControlLabel>
+            <FormControl type="text" id="name" onChange={this.handleChange.bind(this)} value={this.state.name} required/>
+            </FormGroup>
+          </form>
         </Col>
         <Col xs={2} md={2}> 
-            <form>
-              <FormGroup style={{padding: 5}}>
-              <ControlLabel> Servings Min </ControlLabel>
-              <FormControl type="number" id="servingsMin" onChange={this.handleChange.bind(this)} value={this.state.servingsMin}/>
-              </FormGroup>
-            </form>
+          <form>
+            <FormGroup style={{padding: 5}}>
+            <ControlLabel> Servings Min </ControlLabel>
+            <FormControl type="number" id="servingsMin" onChange={this.handleChange.bind(this)} value={this.state.servingsMin}/>
+            </FormGroup>
+          </form>
         </Col>
         <Col xs={2} md={2}> 
-            <form>
-              <FormGroup style={{padding: 5}}>
-              <ControlLabel> Servings Max </ControlLabel>
-              <FormControl type="number" id="servingsMax" onChange={this.handleChange.bind(this)} value={this.state.servingsMax}/>
-              </FormGroup>
-            </form>
+          <form>
+            <FormGroup style={{padding: 5}}>
+            <ControlLabel> Servings Max </ControlLabel>
+            <FormControl type="number" id="servingsMax" onChange={this.handleChange.bind(this)} value={this.state.servingsMax}/>
+            </FormGroup>
+          </form>
         </Col>
         <Col xs={4} md={4}> 
           <form> 
