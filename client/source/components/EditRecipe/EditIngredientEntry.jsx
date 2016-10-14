@@ -107,46 +107,46 @@ class EditIngredientEntry extends React.Component {
 
 	render() {
 		return (
-			<Row> 
+			<Row style={{marginBottom: 15}}> 
 				<Form inline style={{display: this.state.display}} onSubmit={this.handleEdit.bind(this)}>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="name">
 				    <FormControl type="text" disabled={this.state.disabled} value={this.state.name} onChange={this.handleChange.bind(this)} />
 				  </FormGroup>
 				</Col>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="amount">
 				    <FormControl type="number" disabled={this.state.disabled} value={this.state.amount} onChange={this.handleChange.bind(this)} />
 				  </FormGroup>
 				</Col>
-				<Col xs={1} md={1} style={{margin: 5}}>
-		          <FormGroup controlId="unit">
-		            <FormControl componentClass="select" onChange={this.handleChange.bind(this)} disabled={this.state.disabled}>
-		              {this.state.unitsMenu.map((unit, i)=> (
-		              	<option key={'unit' + i} value={unit}>{unit}</option>
-		              ))}
-		            </FormControl>
-		          </FormGroup>
+				<Col xs={2} md={2}>
+          <FormGroup controlId="unit">
+            <FormControl componentClass="select" style={{width: '100%'}}  onChange={this.handleChange.bind(this)} disabled={this.state.disabled}>
+              {this.state.unitsMenu.map((unit, i)=> (
+              	<option key={'unit' + i} value={unit}>{unit}</option>
+              ))}
+            </FormControl>
+          </FormGroup>
 				</Col>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="prep">
 				    <FormControl type="text" disabled={this.state.disabled} value={this.state.prep} onChange={this.handleChange.bind(this)}/>
 				  </FormGroup>
 				</Col>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="optional">
 				    <FormControl type="text" disabled={this.state.disabled} value={this.state.optional} onChange={this.handleChange.bind(this)}/>
 				  </FormGroup>
 				</Col> 
-				<Col xs={3} md={3} style={{margin: 5}}>
-				  <Button type="button" style={{margin: 5}} onClick={this.handleClick.bind(this)}>
+				<Col xs={2} md={2}>
+				  <Button type="button" onClick={this.handleClick.bind(this)}>
 				    Edit
+				  </Button>
+				  <Button type="button" style={{marginLeft: 15}} onClick={this.handleDelete.bind(this)} disabled={this.state.disabled}>
+				    Delete
 				  </Button>
 				  <Button type="submit" style={{margin: 5, display: 'none'}} disabled={this.state.disabled}>
 				    Commit
-				  </Button>
-				  <Button type="button" style={{margin: 5}} onClick={this.handleDelete.bind(this)} disabled={this.state.disabled}>
-				    Delete
 				  </Button>
 				  </Col> 
 				</Form>

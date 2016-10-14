@@ -12,18 +12,33 @@ import placeholders from '../../../../placeholders'
 var axios = require('axios'); 
 
 const issueObjectTemplate = {
-  _id: '11111111',
+  _id: '5b7adkfd',
   issueCreator: '', 
   status: '',
   comments: []
 }
+
+const month = [];
+month[0] = "January";
+month[1] = "February";
+month[2] = "March";
+month[3] = "April";
+month[4] = "May";
+month[5] = "June";
+month[6] = "July";
+month[7] = "August";
+month[8] = "September";
+month[9] = "October";
+month[10] = "November";
+month[11] = "December";
 
 class IssuesManage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       recipe: placeholders.recipeTemplate, 
-      issueObject: issueObjectTemplate, 
+      issueObject: issueObjectTemplate,
+      ownRecipe: false,  
       title: 'Title', 
       issueType: 'general comment',   
       text: '',
@@ -45,10 +60,13 @@ class IssuesManage extends Component {
     .then((result)=> {
       var recipe = result.data; 
       console.log('RECIPE: ', recipe);
-      console.log(issueObject);        
+      console.log(issueObject);
+      var ownRecipe = this.props.username === this.props.params.username;    
+      console.log(ownRecipe);      
       this.setState({
         recipe: recipe,
-        issueObject: issueObject
+        issueObject: issueObject,
+        ownRecipe: ownRecipe
       }); 
     })
     .catch((error) => {
@@ -110,6 +128,13 @@ class IssuesManage extends Component {
   }
 
   _renderSubmitButton(){
+    if (!this.state.ownRecipe) {
+      return (
+        <Row> 
+          <Button id="comment" bsStyle="success" style={{margin: 15 }} onClick={this.handleClick.bind(this)}>Comment</Button> 
+        </Row> 
+      )
+    }
     if ( this.state.response !== 'Leave a comment' && this.state.response !== '') {
       return (
         <Row> 
@@ -129,6 +154,37 @@ class IssuesManage extends Component {
     }
   }
 
+  _renderCommentDate(comment) {
+    var createdAt = comment.createdAt; 
+    console.log('CREATED AT: ', createdAt); 
+    createdAt = createdAt.split('T')[0].split('-'); 
+    var currentDate = new Date(); 
+    currentDate = currentDate.toISOString(); 
+    currentDate = currentDate.split('T')[0].split('-');
+    console.log('CURRENT DATE: ',currentDate);  
+    var dateString = ''; 
+    if (createdAt[1] === currentDate[1]) {
+      if (createdAt[2] === currentDate[2]) {
+        dateString = 'today'; 
+      } else {
+        var days = parseInt(currentDate[2]) - parseInt(createdAt[2]);  
+        dateString = `${days} days ago`; 
+      }
+    } else {
+      var months = parseInt(currentDate[1]) - parseInt(createdAt[1]); 
+      if (months === 1) {
+        dateString = `${months} month ago`; 
+      } else {
+        dateString = `${months} months ago`; 
+      }
+    }
+    console.log('dateString'); 
+    console.log(dateString); 
+    return (
+      <h4 style={{marginLeft: 10}}> {`${comment.username} commented ${dateString}`} </h4> 
+    )
+  } 
+
   render() {
     return (
       <Grid>
@@ -147,7 +203,7 @@ class IssuesManage extends Component {
           </Col> 
         </Row> 
         <Row> 
-          <h2> {'this.state.issueObject.title'} </h2>
+          <h2> {this.state.issueObject.title} </h2>
           <h4> Issue #{this.state.issueObject._id.slice(0,6)} </h4>
           <Label>{this.state.issueObject.status}</Label>
         </Row> 
@@ -156,7 +212,7 @@ class IssuesManage extends Component {
             <Col xs={10} md={10} xsOffset={1} mdOffset={1}>
               <Panel style={{paddingTop: 0}}> 
                 <Row style={{background: 'rgba(128,128,128, 0.2)', marginTop: 0, paddingTop: 0}}> 
-                  <h4 style={{marginLeft: 10}}> {`${comment.username} commented ${2} days ago`} </h4> 
+                {this._renderCommentDate(comment)}
                 </Row> 
                 {this._renderAdditionalDetails(comment)}
                 <Row style={{marginLeft: 10, marginRight: 10}}> 

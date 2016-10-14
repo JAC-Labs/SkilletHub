@@ -1,6 +1,9 @@
 import React from 'react';
 import AddStep from './AddStep'; 
 
+//Bootstrap 
+import { Grid, Row, Col } from 'react-bootstrap';
+
 class StepsForm extends React.Component {
 	constructor(props) {
 		super(props);
@@ -30,16 +33,8 @@ class StepsForm extends React.Component {
 
 	render () {
 		return (
-			<div>
+			<Row>
 				<h3> Recipe Steps </h3>
-				{this.state.steps.map((step) => (
-					<div key={'enteredStep' + step.position}>
-					  <h4> Step {step.position} </h4>
-					  <h5> {step.description} </h5>
-					  <h5> {step.ingredients || ''} {step.parsedIngredients.join(', ') || ''} </h5>
-					  <h5> {step.stepTime} </h5>
-					</div>
-				))}
 				<AddStep 
 					key={'step' + this.state.stepsCount} 
 					stepNumber={this.state.stepsCount} 
@@ -47,7 +42,15 @@ class StepsForm extends React.Component {
 					step={this.state.newStep}
 					availableIngredients={this.props.availableIngredients}
 				/>
-			</div>
+				{this.state.steps.map((step) => (
+					<Row key={'enteredStep' + step.position}>
+					  <h4> Step {step.position} </h4>
+					  <h5> {step.description} </h5>
+					  <h5> {step.ingredients || ''} {step.parsedIngredients.join(', ') || ''} </h5>
+					  <h5> {step.stepTime} </h5>
+					</Row>
+				))}
+			</Row>
 		); 
 	}
 }

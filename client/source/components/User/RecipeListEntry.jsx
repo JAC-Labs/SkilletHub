@@ -16,7 +16,7 @@ export default ({recipe, username, branches, handleForkedFromUserClick, handleRe
             <ProgressBar bsStyle={progressBarStyles[(Math.floor(Math.random() * 4))]} now={(Math.floor(Math.random() * 100))} />
           </Col>
           <Col xs={3} md={3} style={{marginTop: 25}}> 
-            <h4> branches <Badge>{branches}</Badge></h4> 
+            <h4> branches <Badge>{branches.length}</Badge></h4> 
           </Col>
         </Row>
     )

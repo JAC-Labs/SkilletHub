@@ -75,6 +75,7 @@ class RecipeVersionControl extends React.Component {
       return (
         <div style={{marginTop: 25, float: "right"}}> 
           <ButtonGroup style={{marginRight: 10}}>
+            <Button id="issue" bsStyle="success" type="submit" onClick={this.props.handleClick.bind(this)}>new issue</Button>
             <Button id="issuesList" type="submit" onClick={this.props.handleClick.bind(this)}>view issues</Button>
             <Button id="edit" type="submit" onClick={this.props.handleClick.bind(this)}>edit recipe</Button>
             <Button id="pull" type="submit" onClick={this.props.handleClick.bind(this)}>create pull request</Button>
@@ -86,7 +87,8 @@ class RecipeVersionControl extends React.Component {
       return (
         <div style={{marginTop: 25, float: "right"}}> 
           <ButtonGroup style={{marginRight: 10}}>
-            <Button id="issue" type="submit" onClick={this.props.handleClick.bind(this)}>new issue</Button>
+            <Button id="issue" bsStyle="success" type="submit" onClick={this.props.handleClick.bind(this)}>new issue</Button>
+            <Button id="viewIssues" type="submit" onClick={this.props.handleClick.bind(this)}>view issues</Button>
             <Button id="edit" type="submit" onClick={this.props.handleClick.bind(this)}>edit recipe</Button>
             <Button id="pull" type="submit" onClick={this.props.handleClick.bind(this)}>create pull request</Button>
           </ButtonGroup>

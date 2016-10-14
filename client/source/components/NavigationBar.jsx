@@ -15,11 +15,7 @@ class NavigationBar extends React.Component {
   }
 
   componentWillMount(){
-    console.log('MOUNTING NAV BAR'); 
-    console.log('NAVBAR STATE:', this.state); 
-    console.log('RECEIVING PROPS: ', this.props); 
     this.setState({
-      userID: this.props.userID,
       username: this.props.username
     });
   }
@@ -33,7 +29,6 @@ class NavigationBar extends React.Component {
 
   handleSearch (event) {
     event.preventDefault();
-    console.log('Search clicked in nav');
     this.props.handleRecipeSearch(this.state.search);
   }
 
@@ -50,7 +45,6 @@ class NavigationBar extends React.Component {
 
   handleLogout(event){
     event.preventDefault();
-    console.log('Attempting to logout!'); 
     var user = this.state;
     this.props.handleLogOutUser(user);
   }
@@ -60,7 +54,7 @@ class NavigationBar extends React.Component {
   }
 
   _renderAuthentication() {
-    if (this.props.userID === null) {
+    if (this.props.username === null) {
       return (
         <Nav pullRight>
           <Navbar.Form>

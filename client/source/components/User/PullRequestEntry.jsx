@@ -28,6 +28,19 @@ class PullRequestEntry extends React.Component {
     }
   }
 
+  _renderPullRequestButton(status) {
+    if (status === 'open') {
+      return (
+        <Button 
+          bsStyle="success" 
+          data-pullrequest={JSON.stringify(this.props.pullRequest)} 
+          onClick={this.props.handlePullRequestClick.bind(this)}> 
+          Manage  
+        </Button> 
+      )
+    }
+  }
+
   render() {
     return (
       <Row height={50} style={{borderBottom: "1px solid rgba(128,128,128, 0.2)"}}> 
@@ -44,18 +57,7 @@ class PullRequestEntry extends React.Component {
           {this._renderStatus(this.props.pullRequest.status)}
         </Col>
         <Col xs={2} md={2} style={{marginTop: 30}}> 
-          <Button 
-            bsStyle="success"
-            data-username={this.props.username}
-            data-recipe={this.props.pullRequest.targetVersion}
-            data-branch={'master'}
-            data-version={this.props.pullRequest.targetVersion}
-            data-pulluser={this.props.pullRequest.sendingUser}
-            data-pullrecipe={this.props.pullRequest.targetVersion}
-            data-pullrequest={JSON.stringify(this.props.pullRequest)}
-            onClick={this.props.handlePullRequestClick.bind(this)}> 
-              Manage  
-          </Button> 
+          {this._renderPullRequestButton(this.props.pullRequest.status)}
         </Col>
       </Row>
     )

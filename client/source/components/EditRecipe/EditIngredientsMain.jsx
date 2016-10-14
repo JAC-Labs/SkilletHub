@@ -6,7 +6,7 @@ import AddIngredientEntry from './AddIngredientEntry';
 import { Grid, Row, Col, Form, FormGroup, FormControl, Button, Container, ControlLabel, DropdownButton, MenuItem } from 'react-bootstrap';
 
 const units = ['select unit', 'tsp.', 'tbsp.', 'fl.oz.', 'cup', 'pt.', 'qt.', 'gal.', 'g', 'kg', 'oz.', 'lbs', 'whole']; 
-const headers = [['Ingredient', 2], ['Quantity', 2], ['Unit', 1], ['Preparation', 2], ['Notes', 2]]; 
+const headers = [['Ingredient', 2], ['Quantity', 2], ['Unit', 2], ['Preparation', 2], ['Notes', 2]]; 
 
 import meatloafRecipe from '../../../../meatloafRecipe'
 
@@ -20,7 +20,7 @@ class EditIngredientsMain extends React.Component {
 			<Grid>
 				<Row> 
 					{headers.map((header) => (
-						<Col xs={header[1]} md={header[1]} style={{margin: 5}}>
+						<Col xs={header[1]} md={header[1]} style={{marginTop: 5}}>
 							<h4> {header[0]} </h4> 
 						</Col> 
 					))}

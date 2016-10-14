@@ -18,6 +18,7 @@ class EditStepsMain extends React.Component {
   render () {
     return (
       <Grid>
+        <h3> Recipe Steps </h3> 
         <Row> 
           {this.props.steps.map((step, i) => (
             <EditStepEntry key={'step' + i} step={step} index={i} 
@@ -29,9 +30,6 @@ class EditStepsMain extends React.Component {
             />
           ))}
         </Row>
-        <Row>   
-        <h4> {JSON.stringify(this.props.availableIngredients)} </h4>
-        </Row> 
         <Row> 
           <AddStepEntry handleAddStep={this.props.handleAddStep.bind(this)} availableIngredients={this.props.availableIngredients} />
         </Row>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 //Bootstrap 
-import { Grid, Row, Col, Form, FormGroup, FormControl, Button, Container, ControlLabel, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Grid, Row, Col, Form, FormGroup, FormControl, Button, Container, ControlLabel, DropdownButton, MenuItem, Panel } from 'react-bootstrap';
 
 const timesRegEx = [/\d+\s?sec/, /\d+\s?min/, /\d+\s?hr/, /\d+\s?hour/]; 
 
@@ -59,11 +59,6 @@ class EditStepEntry extends React.Component {
     var step = this.state; 
     this.props.handleDeleteStep(step); 
     this.setState({display: 'none'}); 
-
-    // console.log('Attempting to delete step!'); 
-    // console.log(this.state.description); 
-    // console.log(step); 
-    // console.log(typeof this.props.handleDeleteStep);
   }
 
   handleEdit (event) {
@@ -71,10 +66,6 @@ class EditStepEntry extends React.Component {
     var step = this.state; 
     this.props.handleEditStep(step); 
     this.setState({disabled: true}); 
-    
-    // console.log('Attempting to edit step!'); 
-    // console.log(step); 
-    // console.log(typeof this.props.handleEditStep);
   }
 
 
@@ -84,7 +75,6 @@ class EditStepEntry extends React.Component {
     timesRegEx.forEach((timeRegEx) => {
       var time = timeRegEx.exec(string); 
       if (time) {
-        // console.log(time); 
         match.push(time); 
       } 
     });
@@ -165,9 +155,10 @@ class EditStepEntry extends React.Component {
   _renderTime(){
     if (this.props.step.time) {
       return (
-        <Col xs={4} md={4} style={{margin: 5}}>
-          <h4> Time: {this.state.time} minutes </h4>
-        </Col>
+        <Col xs={3} md={3}>
+          <h4> Time: </h4>
+          <h4> {this.state.time} minutes </h4>
+        </Col> 
       )
     }
   }
@@ -176,28 +167,43 @@ class EditStepEntry extends React.Component {
     return (
       <Grid style={{display: this.state.display}}>
         <Row> 
-          <Col xs={8} md={8} style={{margin: 5}}>
-            <FormGroup validationState={this.state.validation}>
-              <ControlLabel> Step Description </ControlLabel>
-              <FormControl componentClass="textarea" type="text" style={{height: this.state.lines}} id="description" value={this.state.description} onChange={this.handleChange.bind(this)} disabled={this.state.disabled}/>
-            </FormGroup>
-          </Col>
-          <Button type="submit" style={{marginTop: 30, padding: 10}} onClick={this.handleClick.bind(this)}>
-            Edit
-          </Button>
-          <Button type="submit" style={{marginTop: 30, padding: 10}} onClick={this.handleEdit.bind(this)} disabled={this.state.disabled}>
-            Commit Edit
-          </Button>
-          <Button type="submit" style={{marginTop: 30, padding: 10}} onClick={this.handleDelete.bind(this)} disabled={this.state.disabled}>
-            Delete
-          </Button>
-        </Row>
-        <Row> 
-          <Col xs={4} md={4} style={{margin: 5}}>
-            <h4> Ingredients: {this.state.ingredients.join(', ')} </h4>
-          </Col>
-          {this._renderTime()}
-        </Row>
+        <Col xs={10} md={10} xsOffset={1} mdOffset={1}>
+        <Panel> 
+          <Row > 
+            <Col xs={12} md={12}>
+              <FormGroup validationState={this.state.validation} style={{marginBottom: 0}}>
+                <ControlLabel> Step Description </ControlLabel>
+                <FormControl componentClass="textarea" type="text" style={{height: this.state.lines}} id="description" value={this.state.description} onChange={this.handleChange.bind(this)} disabled={this.state.disabled}/>
+              </FormGroup>
+            </Col>
+          </Row> 
+          <Row> 
+            <Col xs={9} md={9}> 
+              <h4> Ingredients:  </h4>
+              <h4> {this.state.ingredients.join(', ')} </h4> 
+            </Col> 
+              {this._renderTime()}
+          </Row> 
+          <Row> 
+            <Col xs={4} md={4}> 
+            <Button type="submit" style={{width: "100%"}} onClick={this.handleClick.bind(this)}>
+              Edit
+            </Button>
+            </Col> 
+            <Col xs={4} md={4}> 
+            <Button type="submit" bsStyle="success" style={{width: "100%"}} onClick={this.handleEdit.bind(this)} disabled={this.state.disabled}>
+              Commit Edit
+            </Button>
+            </Col>
+            <Col xs={4} md={4}> 
+            <Button type="submit" bsStyle="danger" style={{width: "100%"}} onClick={this.handleDelete.bind(this)} disabled={this.state.disabled}>
+              Delete
+            </Button>
+            </Col>
+          </Row>
+        </Panel> 
+        </Col>
+        </Row> 
       </Grid>
     )
   }

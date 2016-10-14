@@ -38,13 +38,6 @@ class CreateRecipeMain extends Component {
     }; 
   }
 
-  // componentWillMount() {
-  //   console.log('Create recipe page is mounting!'); 
-  //   // TODO: Implement request that loads the recipe data for a given recipe to this components state. 
-  //     --> // Main Server 
-  //   console.log(wellingtonRecipe); 
-  // }
-
   handleChange (event) {
     var inputType = event.target.id; 
     if (inputType === 'name'){
@@ -183,11 +176,21 @@ class CreateRecipeMain extends Component {
     event.preventDefault(); 
 
     var recipeObject = {}; 
+    var steps = this.state.steps; 
+    var cookTime = 0; 
+    steps.forEach((step) => {
+      if (step.time !== '') {
+        console.log(step.time); 
+        cookTime += parseInt(step.time); 
+      }
+    }); 
+    console.log("COOK TIME:", cookTime); 
+
     recipeObject.createdAt = Date.now();
     recipeObject.name = {changed: true, value: this.state.name}; 
     recipeObject.description = {changed: true, value: this.state.description}; 
     recipeObject.servings = {changed: true, value: `serves ${this.state.servingsMin} to ${this.state.servingsMax}`}; 
-    recipeObject.cookTime = {changed: true, value: this.state.cookTime}; 
+    recipeObject.cookTime = {changed: true, value: cookTime}; 
     recipeObject.skillLevel = {changed: true, value: this.state.skillLevel};
     recipeObject.picture = {changed: true, value: this.state.picture};
     recipeObject.dependencies = []; 
@@ -219,7 +222,7 @@ class CreateRecipeMain extends Component {
       <Button onClick={this.createMeatloaf.bind(this)}> Create Meatloaf </Button> 
       <Button onClick={this.createWellington.bind(this)}> Create Wellington </Button> 
       <Button onClick={this.createNachos.bind(this)}> Create Nachos </Button> 
-      <Row className="show-grid">
+      <Row>
         <Col xs={4} md={4}> 
             <form>
               <FormGroup style={{padding: 5}}>
@@ -231,7 +234,7 @@ class CreateRecipeMain extends Component {
         <Col xs={2} md={2}> 
             <form>
               <FormGroup style={{padding: 5}}>
-              <ControlLabel> Recipe Servings Min </ControlLabel>
+              <ControlLabel> Servings Min </ControlLabel>
               <FormControl type="number" id="servingsMin" onChange={this.handleChange.bind(this)} value={this.state.servingsMin}/>
               </FormGroup>
             </form>
@@ -239,7 +242,7 @@ class CreateRecipeMain extends Component {
         <Col xs={2} md={2}> 
             <form>
               <FormGroup style={{padding: 5}}>
-              <ControlLabel> Recipe Servings Max </ControlLabel>
+              <ControlLabel> Servings Max </ControlLabel>
               <FormControl type="number" id="servingsMax" onChange={this.handleChange.bind(this)} value={this.state.servingsMax}/>
               </FormGroup>
             </form>
@@ -317,12 +320,12 @@ class CreateRecipeMain extends Component {
       </Row>
       <Row className="show-grid">
         <Col xs={12} md={12}> 
-            <form>
-              <FormGroup style={{padding: 5}}>
-              <ControlLabel> Recipe Description </ControlLabel>
-              <FormControl componentClass="textarea" id="description" onChange={this.handleChange.bind(this)} value={this.state.description} />
-              </FormGroup>
-            </form>
+          <form>
+            <FormGroup style={{padding: 5}}>
+            <ControlLabel> Recipe Description </ControlLabel>
+            <FormControl componentClass="textarea" id="description" onChange={this.handleChange.bind(this)} value={this.state.description} />
+            </FormGroup>
+          </form>
         </Col>
       </Row>
       <Row> 

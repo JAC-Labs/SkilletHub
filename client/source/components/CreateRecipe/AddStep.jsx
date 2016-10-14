@@ -2,7 +2,7 @@ import React from 'react';
 import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router';
 
 //Bootstrap 
-import { Grid, Row, Col, FormGroup, FormControl, Button, Jumbotron, Carousel, Container, ControlLabel } from 'react-bootstrap';
+import { Grid, Row, Col, Form, FormGroup, FormControl, Button, ControlLabel } from 'react-bootstrap';
 
 const timesRegEx = [/\d+\s?sec/, /\d+\s?min/, /\d+\s?hr/, /\d+\s?hour/]; 
 
@@ -37,10 +37,19 @@ class AddStep extends React.Component {
 		timesRegEx.forEach((timeRegEx) => {
 			var time = timeRegEx.exec(string); 
 			if (time) {
-				match.push(time); 
+				match.push(time[0]);
 			} 
 		});
-		return match; 
+		console.log('MATCH IS:', match); 
+		console.log(match[0]); 
+		if (match[0]) {
+			var time = match[0].split(' '); 
+			if (time[1] === 'min' || time[1] === 'minute') {
+				return time[0]; 
+			} else if (time[1] === 'hour' || time[1] === 'hr') {
+				return parseInt(time[0]) * 60; 
+			}
+		} 
 	}
 
 	handleChange (event) {
@@ -61,17 +70,20 @@ class AddStep extends React.Component {
 	  		}
 	  	});
 
-	  	this.setState({
-	  		description: event.target.value,
-	  		parsedIngredients: parsedIngredients
-	  	}); 
-
 	  	var time = this.timeParse(description); 
 	  	var stepTime = this.state.stepTime; 
 	  	if (time && !stepTime) {
 	  		console.log('SETTING TIME: ', time); 
 	  		this.setState({
-	  			stepTime: time[0]
+	  			time: time, 
+	  			stepTime: time, 
+	  			description: event.target.value,
+	  			parsedIngredients: parsedIngredients
+	  		}); 
+	  	} else {
+	  		this.setState({
+	  			description: event.target.value,
+	  			parsedIngredients: parsedIngredients
 	  		}); 
 	  	}
 	  } 
@@ -80,28 +92,20 @@ class AddStep extends React.Component {
 	render () {
 		return (
 			<Grid>
-			<form onSubmit={this.handleClick.bind(this)}>
-			<Row className="show-grid">
-			  <Col xs={8} md={8}> 
-		  		<FormGroup>
-		        <ControlLabel> Step Description </ControlLabel>
-		        <FormControl type="text" id="description" onChange={this.handleChange.bind(this)} value={this.state.description} />
-		       </FormGroup>
-			  </Col>
-			</Row>
-			<div>
-				<button style={{display: "none"}} onClick={this.handleClick.bind(this)}> Next Step </button> 
-			</div>
-			</form>
+				<Form onSubmit={this.handleClick.bind(this)}>
+					<Row>
+					  <Col xs={12} md={12}> 
+				      <FormGroup style={{padding: 5}}>
+					      <ControlLabel> Step Description </ControlLabel>
+					      <FormControl type="text" id="description" style={{height: 40}} onChange={this.handleChange.bind(this)} value={this.state.description} />
+				      </FormGroup>
+					  </Col>
+					</Row>
+					<Button type="submit" style={{display: "none"}} onClick={this.handleClick.bind(this)} onSubmit={this.handleClick.bind(this)}> Next Step </Button> 
+				</Form>
 			</Grid>
 		); 
 	}
 }
 
 export default AddStep;
-
-
-			// <div> 
-			// 	<h4> Parsed Ingredient List: </h4>
-			// 	<h4> {JSON.stringify(this.state.parsedIngredients)} </h4>
-			// </div>

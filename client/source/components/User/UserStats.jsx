@@ -11,7 +11,8 @@ class UserStats extends React.Component {
   }
 
   _renderFollowUserButton(){ 
-    if (!this.props.loggedInUserProfile) {
+    var followedUserProfile = this.props.followingListMaster.indexOf(this.props.profileUsername) !== -1;  
+    if (!this.props.loggedInUserProfile && !followedUserProfile) {
       return (
         <Row > 
           <Col xs={6} md={6} xsOffset={2} mdOffset={2} style={{marginBottom: 15}}>
@@ -22,7 +23,7 @@ class UserStats extends React.Component {
           </Col> 
         </Row>
       )
-    } else {
+    } else if (!this.props.loggedInUserProfile) {
       return (
         <Row > 
           <Col xs={12} md={12} style={{marginBottom: 15}}>

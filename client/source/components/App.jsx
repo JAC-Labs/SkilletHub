@@ -14,16 +14,20 @@ class App extends React.Component {
   constructor(props) {
     super(props); 
     this.state = {
-      userID: null,
-      token: null,
-      username: '', 
+      username: null, 
       password: '',
-      currentProfile: null,
+      token: null,
+      // currentProfile: null,
       loggedInUserProfile: true,
       pullRequestObject: {},
-      issueObject: {} 
+      issueObject: {},
+      followingListMaster: [] 
   	}; 
   }
+
+  /************************************************************
+  /****************     AUTHENTICATION      *******************
+  ************************************************************/
 
   handleSignUp(user) { 
     Auth.signUpUser(user, this);
@@ -37,44 +41,64 @@ class App extends React.Component {
     Auth.logOutUser(user, this); 
   }
 
-  handleRecipeSearch(searchTerms) {
-    console.log('In App handleRecipeSearch, routing to /Search with: ', searchTerms);
-    searchTerms = searchTerms.toString();
-    browserHistory.push(`/Search/${searchTerms}`);
-  }
+  /************************************************************
+  /****************     USERS HANDLERS      *******************
+  ************************************************************/
   
+  // Navigates to the clicked on username's profile 
   handleUserClick(event) {
     event.preventDefault(); 
-    // console.log('Clicked on username!'); 
-    // console.log(event.target); 
-    // console.log('USERNAME STATE');
-    // console.log(this.state.username);
     var selectedUser = event.target.id;
     var loggedInUserProfile = this.state.username === selectedUser ? true : false; 
     this.setState({loggedInUserProfile: loggedInUserProfile}); 
     browserHistory.push(`/User/${selectedUser}`);
   }
 
+  // Follows the clicked on username, storing it in the the logged in user's profile under list of followed users. 
+  handleFollowUserClick(event) {
+    event.preventDefault();
+    var usernameParameter = this.state.username; 
+    var followUsernameParameter = this.props.params.username; 
+    axios.post(`/${usernameParameter}/follow/${followUsernameParameter}`)
+    .then((result) => {
+      console.log('Followed new user'); 
+    })
+    .catch((error) => {
+      console.log(error); 
+    }); 
+  }
+
+  // Sets the list of followed users in App, used to determine if a given user is followed by the logged in user. 
+  handleSetFollowingListMaster(following){
+    this.setState({
+      followingListMaster: following 
+    }); 
+  }
+
+  /************************************************************
+  /****************   BASIC RECIPE HANDLERS      ***************
+  ************************************************************/
+
+  // Navigates to the clicked on recipe's view page  
+  // NOTE: This is used to access the most recent recipe of the root recipe's master branch 
   handleRecipeViewClick(event) {
     event.preventDefault(); 
-    // console.log('Clicked on username!'); 
-    // console.log(event.target); 
-    // console.log('USERNAME: ', event.target.dataset.username); 
     var usernameParameter = event.target.dataset.username; 
     var recipeParameter = event.target.dataset.recipe; 
     browserHistory.push(`/Recipe/${usernameParameter}/${recipeParameter}`);
   }
 
+  // Navigates to the clicked on recipe's edit page  
+  // NOTE: This is used to access the most recent recipe of the root recipe's master branch 
   handleRecipeEditClick(event) {
     event.preventDefault(); 
-    // console.log('CLICKED EDIT IN APP!'); 
-    // console.log(event.target); 
     var usernameParameter = event.target.dataset.username; 
     var recipeParameter = event.target.dataset.recipe;
     browserHistory.push(`/Edit/${usernameParameter}/${recipeParameter}`);
   }
 
-  // handler for editing a specific version of a recipe
+  // Navigates to the clicked on recipe's edit page  
+  // NOTE: This is used to access a specified version of the selected recipe 
   handleRecipeVersionEdit(recipeObject) {
     event.preventDefault(); 
     var usernameParameter = recipeObject.username; 
@@ -84,8 +108,9 @@ class App extends React.Component {
     browserHistory.push(`/Edit/${usernameParameter}/${recipeParameter}/${branchParameter}/${versionParameter}`);
   }
 
+  // Navigates to the CookME view for a selected recipe
+  // NOTE: Event is sometimes passed an event as parameter, sometimes passed an object. This function includes error handling for that
   handleRecipeCookClick(event) {
-    // event.preventDefault();
     if (typeof event.preventDefault === 'function') {
       var usernameParameter = event.target.dataset.username; 
       var recipeParameter = event.target.dataset.version;
@@ -93,23 +118,19 @@ class App extends React.Component {
       var usernameParameter = event.username; 
       var recipeParameter = event.version;
     }
-    var route = '/CookMe/'+usernameParameter+'/'+recipeParameter;
-    console.log('NAVIGATING TO:', route); 
-    browserHistory.push(`${route}`); 
+    browserHistory.push(`/CookMe/${usernameParameter}/${recipeParameter}`); 
   }
 
+  // Forks a selected recipe, storing it in the logged in users profile within the database. 
+  // NOTE: This accesses a specified version of the selected recipe 
   handleRecipeForkClick(event) {
     event.preventDefault(); 
-    console.log('handleRecipeForkClick event: ', event);
-    // console.log('CLICKED FORK IN APP!'); 
-    // console.log(event.target.dataset); 
     var usernameParameter = event.target.dataset.username; 
     var recipeParameter = event.target.dataset.recipe;
     var branchParameter = event.target.dataset.branch;
     var versionParameter = event.target.dataset.version; 
     var loggedInUser = this.state.username; 
-    console.log(loggedInUser); 
-    // console.log('FORK USER: ', forkUser); 
+
     axios.post(`/${usernameParameter}/${recipeParameter}/${branchParameter}/${versionParameter}/fork`, {
       username: loggedInUser
     })
@@ -121,6 +142,9 @@ class App extends React.Component {
     }); 
   }
 
+  // Forks a selected recipe, storing it in the logged in users profile within the database. 
+  // NOTE: This accesses a specified version of the selected recipe 
+  // NOTE: This function expects a recipeObject rather than an event as a parameter 
   handleRecipeVersionFork(recipeObject) {
     var usernameParameter = recipeObject.username; 
     var recipeParameter = recipeObject.recipe;
@@ -139,6 +163,13 @@ class App extends React.Component {
     }); 
   }
 
+  /************************************************************
+  /****************   PULL REQUEST HANDLERS      **************
+  ************************************************************/
+
+  // Initializes a pull request for a specified version of a recipe
+  // NOTE: This page displays the differences between the logged in user's recipe and the recipe they will be submitting the pull request to. 
+  // NOTE: This handler does not actually create the pull request, that occurs when handleCreatePullRequest is triggered
   handleRecipeVersionPull(recipeObject) {
     var usernameParameter = recipeObject.username; 
     var recipeParameter = recipeObject.recipe;
@@ -149,6 +180,7 @@ class App extends React.Component {
     browserHistory.push(`/Pull/${usernameParameter}/${recipeParameter}/${branchParameter}/${versionParameter}/${sourceUserParameter}/${sourceRecipeParameter}`);
   }
 
+  // Creates the pull request and submits the pull request to the owner of the root recipe for review. 
   handleCreatePullRequest(pullRequestObject) {
     var usernameParameter = this.state.username; 
     axios.post(`/${usernameParameter}/create-pull`, {
@@ -157,8 +189,6 @@ class App extends React.Component {
       targetVersionId: pullRequestObject.targetVersionId
     })
     .then((result) => {
-      console.log('SUCCESSFUL PULL REQUEST'); 
-      console.log(result); 
       browserHistory.push(`/User/${usernameParameter}`);
     })
     .catch((error) => {
@@ -166,20 +196,23 @@ class App extends React.Component {
     }); 
   }
 
+  // Navigates to the Pull Request Manage component, where owner of the root recipe can approve, deny or edit a selected Pull Request 
+  // NOTE: This sets the pullRequestObject within App to track the currently worked on pullRequest across components
   handlePullRequestClick(event){
     event.preventDefault(); 
     var pullRequestObject = JSON.parse(event.target.dataset.pullrequest);
     var usernameParameter = pullRequestObject.targetUser; 
-    var pullIdParameter = pullRequestObject._id; 
-    console.log(pullRequestObject);  
-    
+    var pullIdParameter = pullRequestObject._id;     
     this.setState({
       pullRequestObject: pullRequestObject
     }); 
-    // browserHistory.push(`/Manage/${usernameParameter}/${recipeParameter}/${branchParameter}/${versionParameter}/${pullUserParameter}/${pullRecipeParameter}`);
     browserHistory.push(`/Manage/${usernameParameter}/${pullIdParameter}`);
   }
 
+  // Handles the response from the owner of the root recipe. Recipe owners can respond with: 
+  // approve -> Pull request status changed to merged. 
+  // deny -> Pull request status changed to closed. 
+  // NOTE: The current pullRequestObject state in App is reset to nothing once current Pull Request is resolved. 
   handlePullRequestResponse(event) {
     event.preventDefault(); 
     var response = event.target.id; 
@@ -189,15 +222,13 @@ class App extends React.Component {
       var status = 'closed'; 
     }
     var pullRequestObject = this.state.pullRequestObject; 
-    console.log(pullRequestObject); 
     var usernameParameter = pullRequestObject.targetUser; 
     var pullIdParameter = pullRequestObject._id; 
     axios.put(`/${usernameParameter}/${pullIdParameter}/update-pull`, {
       status: status
     })
     .then((result) => {
-      console.log('SUCCESSFULLY RESOLVED PULL REQUEST'); 
-      console.log(result); 
+      this.setState({ pullRequestObject: {} }); 
       browserHistory.push(`/User/${usernameParameter}`); 
     })
     .catch((error) => {
@@ -205,9 +236,9 @@ class App extends React.Component {
     }); 
   }
 
+  // Navigates the pull request to edit page
   handlePullRequestEdit(event) {
     event.preventDefault(); 
-    console.log('pull request edit'); 
     var pullRequestObject = this.state.pullRequestObject; 
     var usernameParameter = pullRequestObject.sendingUser; 
     var recipeParameter = pullRequestObject.sentRootVersion;
@@ -219,10 +250,12 @@ class App extends React.Component {
     browserHistory.push(`/EditPull/${targetUserParameter}/${pullIdParameter}/${usernameParameter}/${recipeParameter}/${branchParameter}/${versionParameter}`);
   }
 
+  // Handles the submission of the editted Pull Request
+  // NOTE: The original Pull Request will be approved once edits are submitted. 
+  // NOTE: The current pullRequestObject state in App is reset to nothing once current Pull Request is resolved. 
   handlePullRequestEditSubmit(editPullRequestObject) {
     var status = 'merged'; 
     var changes = editPullRequestObject; 
-    console.log(this.props.params);
     var usernameParameter = this.props.params.targetUser; 
     var pullIdParameter = this.props.params.pullId; 
     axios.put(`/${usernameParameter}/${pullIdParameter}/update-pull`, {
@@ -230,8 +263,7 @@ class App extends React.Component {
       changes: changes
     })
     .then((result) => {
-      console.log('SUCCESSFULLY RESOLVED PULL REQUEST'); 
-      console.log(result); 
+      this.setState({ pullRequestObject: {} }); 
       browserHistory.push(`/User/${usernameParameter}`); 
     })
     .catch((error) => {
@@ -239,10 +271,20 @@ class App extends React.Component {
     }); 
   }
 
+  /************************************************************
+  /****************       ISSUES HANDLERS       ***************
+  ************************************************************/
+
+  // Navigates to the list of issues for a selected recipe. 
+  // NOTE: This list is accessible to all users. 
   handleViewIssuesClick(usernameParameter, recipeParameter) {
     browserHistory.push(`/Issues/List/${usernameParameter}/${recipeParameter}`); 
   }
 
+  // Navigates to a specfic issue thread for a selected issue. 
+  // NOTE: This sets the issueObject within App to track the currently worked on issueObject across components
+  // NOTE: This thread is accessible to all users, however, only the root recipe owner may resolve or close a given issue. 
+  // NOTE: Other users may comment on the issue. 
   handleViewSingleIssueClick(issueObject) {
     this.setState({
       issueObject: issueObject
@@ -252,12 +294,14 @@ class App extends React.Component {
     browserHistory.push(`/Issues/Manage/${usernameParameter}/${recipeParameter}`); 
   }
 
+  // Navigates to a form that allows users to enter a new issue. 
   handleNewIssueClick(recipeObject) {
     var usernameParameter = recipeObject.usernameParameter; 
     var recipeParameter = recipeObject.recipeParameter; 
     browserHistory.push(`/Issues/${usernameParameter}/${recipeParameter}`); 
   }
 
+  // Handles the submission of a new issue for a given recipe. 
   handleNewIssueSubmit(issueObject) {
     var usernameParameter = issueObject.usernameParameter; 
     var recipeParameter = issueObject.recipeParameter; 
@@ -272,8 +316,6 @@ class App extends React.Component {
       position: position
     })
     .then((result) => {
-      console.log('Created new issue'); 
-      console.log(result); 
       browserHistory.push(`/User/${username}`); 
     })
     .catch((error) => {
@@ -281,37 +323,38 @@ class App extends React.Component {
     }); 
   }
 
+  // Handles the submission of a response to a given issue. 
+  // NOTE: The root recipe owner may close or resolve the issue. 
+  // NOTE: All users may comment on a given issue.
+  // NOTE: The current pullRequestObject state in App is reset to nothing once current Pull Request is resolved. 
   handleIssueResponseSubmit(issueResponseObject) {
-    var usernameParameter = this.props.params.username; 
+    var commentUsernameParameter = this.state.username; 
     var recipeParameter = this.props.params.recipe; 
+    var recipeUsernameParameter = this.props.params.username; 
     var issueParameter = this.state.issueObject._id; 
 
     if (issueResponseObject.type === 'comment') {
-      axios.post(`/${usernameParameter}/${issueParameter}/create-comment`, {
+      axios.post(`/${commentUsernameParameter}/${issueParameter}/create-comment`, {
         data: issueResponseObject.data
       })
       .then((result) => {
-        console.log('Responded to issue'); 
-        console.log(result); 
         this.setState({
           issueObject: {}
         }); 
-        browserHistory.push(`/Issues/List/${usernameParameter}/${recipeParameter}`); 
+        browserHistory.push(`/Issues/List/${recipeUsernameParameter}/${recipeParameter}`); 
       })
       .catch((error) => {
         console.log(error); 
       }); 
     } else {
-      axios.put(`/${usernameParameter}/${recipeParameter}/update-status`, {
+      axios.put(`/${recipeUsernameParameter}/${recipeParameter}/update-status`, {
         status: issueResponseObject.type
       })
       .then((result) => {
-        console.log('Responded to issue'); 
-        console.log(result); 
         this.setState({
           issueObject: {}
         }); 
-        browserHistory.push(`/Issues/List/${usernameParameter}/${recipeParameter}`); 
+        browserHistory.push(`/Issues/List/${recipeUsernameParameter}/${recipeParameter}`); 
       })
       .catch((error) => {
         console.log(error); 
@@ -319,19 +362,9 @@ class App extends React.Component {
     }
   }
 
-  handleFollowUserClick(event) {
-    event.preventDefault();
-    var usernameParameter = this.state.username; 
-    var followUsernameParameter = this.props.params.username; 
-    axios.post(`/${usernameParameter}/follow/${followUsernameParameter}`)
-    .then((result) => {
-      console.log('Followed new user'); 
-      console.log(result); 
-    })
-    .catch((error) => {
-      console.log(error); 
-    }); 
-  }
+  /************************************************************
+  /***************    NAVIGATION / SEARCH    ******************
+  ************************************************************/
 
   handleNavigation(event) {
     event.preventDefault();
@@ -346,6 +379,11 @@ class App extends React.Component {
     browserHistory.push(`${route}`);
   }
 
+  handleRecipeSearch(searchTerms) {
+    searchTerms = searchTerms.toString();
+    browserHistory.push(`/Search/${searchTerms}`);
+  }
+
   /************************************************************
   /****************    RENDER COMPONENTS    *******************
   ************************************************************/
@@ -353,13 +391,13 @@ class App extends React.Component {
 
 	const children = React.Children.map(this.props.children, function (child) {
 	  return React.cloneElement(child, {
-      userID: this.state.userID,
       username: this.state.username, 
-      loggedInUserProfile: this.state.loggedInUserProfile, 
-      handleSignUp: this.handleSignUp.bind(this),
-      
-      pullRequestObject: this.state.pullRequestObject, 
       issueObject: this.state.issueObject, 
+      pullRequestObject: this.state.pullRequestObject, 
+      loggedInUserProfile: this.state.loggedInUserProfile, 
+      followingListMaster: this.state.followingListMaster, 
+
+      handleSignUp: this.handleSignUp.bind(this),
       handleUserClick: this.handleUserClick.bind(this),
       handleRecipeViewClick: this.handleRecipeViewClick.bind(this), 
       handleRecipeEditClick: this.handleRecipeEditClick.bind(this),
@@ -378,7 +416,8 @@ class App extends React.Component {
       handleViewIssuesClick: this.handleViewIssuesClick.bind(this),
       handleViewSingleIssueClick: this.handleViewSingleIssueClick.bind(this),
       handleIssueResponseSubmit: this.handleIssueResponseSubmit.bind(this),
-      handleFollowUserClick: this.handleFollowUserClick.bind(this)
+      handleFollowUserClick: this.handleFollowUserClick.bind(this),
+      handleSetFollowingListMaster: this.handleSetFollowingListMaster.bind(this)
 	  })
 	}.bind(this))
     return (

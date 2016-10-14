@@ -62,40 +62,42 @@ class AddIngredientEntry extends React.Component {
 
 	render() {
 		return (
-			<Row> 
+			<Row style={{marginBottom: 20}}> 
 				<Form inline >
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="name" validationState={this.state.validationState}>
 				    <FormControl type="text" placeholder={'add ingredient here'} value={this.state.name} onChange={this.handleChange.bind(this)} required={'true'} />
 				  </FormGroup>
 				</Col>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="amount" validationState={this.state.validationState}>
 				    <FormControl type="number" value={this.state.amount} onChange={this.handleChange.bind(this)} required={'true'} />
 				  </FormGroup>
 				</Col>
-				<Col xs={1} md={1} style={{margin: 5}}>
-		          <FormGroup controlId="unit" validationState={this.state.validationState}>
-		            <FormControl componentClass="select" onChange={this.handleChange.bind(this)} required={true}>
-		              {this.state.unitsMenu.map((unit, i)=> (
-		              	<option key={'unit' + i} value={unit}>{unit}</option>
-		              ))}
-		            </FormControl>
-		          </FormGroup>
+				<Col xs={2} md={2}>
+          <FormGroup controlId="unit" validationState={this.state.validationState}>
+            <FormControl componentClass="select" style={{width: '100%'}} onChange={this.handleChange.bind(this)} required={true}>
+              {this.state.unitsMenu.map((unit, i)=> (
+              	<option key={'unit' + i} value={unit}>{unit}</option>
+              ))}
+            </FormControl>
+          </FormGroup>
 				</Col>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="prep">
 				    <FormControl type="text" value={this.state.prep} onChange={this.handleChange.bind(this)}/>
 				  </FormGroup>
 				</Col>
-				<Col xs={2} md={2} style={{margin: 5}}>
+				<Col xs={2} md={2}>
 				  <FormGroup controlId="optional">
 				    <FormControl type="text" value={this.state.optional} onChange={this.handleChange.bind(this)}/>
 				  </FormGroup>
 				</Col> 
-				  <Button type="submit" style={{margin: 5}} onClick={this.handleClick.bind(this)} onSubmit={this.handleClick.bind(this)} >
+				<Col xs={2} md={2}> 
+				  <Button type="submit" onClick={this.handleClick.bind(this)} onSubmit={this.handleClick.bind(this)} >
 				    Add
 				  </Button>
+				</Col> 
 				</Form>
 			</Row>
 		)

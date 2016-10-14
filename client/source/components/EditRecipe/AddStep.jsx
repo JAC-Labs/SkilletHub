@@ -1,7 +1,7 @@
 import React from 'react';
 
 //Bootstrap 
-import { Grid, Row, Col, Form, FormGroup, FormControl, Button, Container, ControlLabel, DropdownButton, MenuItem } from 'react-bootstrap';
+import { Grid, Row, Col, Form, FormGroup, FormControl, Button, Container, ControlLabel, DropdownButton, MenuItem, Panel } from 'react-bootstrap';
 
 var units = ['unit', 'tsp.', 'tbsp.', 'fl.oz.', 'cup', 'pt.', 'qt.', 'gal.', 'g', 'kg', 'oz.', 'lbs', 'whole']; 
 const timesRegEx = [/\d+\s?sec/, /\d+\s?min/, /\d+\s?hr/, /\d+\s?hour/]; 
@@ -14,7 +14,7 @@ class AddStep extends React.Component {
       disabled: false, 
       description: null,
       lines: null,
-      ingredients: null,
+      ingredients: [],
       parsedIngredients: [], 
       availableIngredients: null, 
       time: null
@@ -90,25 +90,48 @@ class AddStep extends React.Component {
     }
   }
 
+  _renderTime(){
+    if (this.props.time) {
+      return (
+        <Col xs={3} md={3}>
+          <h4> Time: </h4>
+          <h4> {this.state.time} minutes </h4>
+        </Col> 
+      )
+    }
+  }
+
   render() {
     return (
-      <Grid>
-      <Row> 
-        <Col xs={8} md={8} style={{margin: 5}}>
-          <FormGroup>
-            <ControlLabel> Step Description </ControlLabel>
-            <FormControl componentClass="textarea" type="text" style={{height: this.state.lines}} id="description" value={this.state.description} onChange={this.handleChange.bind(this)} disabled={this.state.disabled} />
-          </FormGroup>
-        </Col>
-        <Col xs={2} md={2} style={{margin: 5}}>
-          <Button type="submit" style={{margin: 5}} onClick={this.handleClick.bind(this)} onSubmit={this.handleClick.bind(this)} >
-            Add
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <h4> {JSON.stringify(this.props.availableIngredients)} </h4>
-      </Row>
+      <Grid style={{display: this.state.display}}>
+        <Row> 
+          <Col xs={10} md={10} xsOffset={1} mdOffset={1}>
+            <Panel> 
+              <Row > 
+                <Col xs={12} md={12}>
+                  <FormGroup>
+                    <ControlLabel> Step Description </ControlLabel>
+                    <FormControl componentClass="textarea" type="text" style={{height: this.state.lines}} id="description" value={this.state.description} onChange={this.handleChange.bind(this)} disabled={this.state.disabled} />
+                  </FormGroup>
+                </Col>
+              </Row> 
+              <Row> 
+                <Col xs={9} md={9}> 
+                  <h4> Ingredients:  </h4>
+                  <h4> {this.state.ingredients.join(', ')} </h4> 
+                </Col> 
+                {this._renderTime()}
+              </Row> 
+              <Row> 
+                <Col xs={4} md={4}> 
+                  <Button type="submit" bsStyle="success" style={{margin: 5}} onClick={this.handleClick.bind(this)} onSubmit={this.handleClick.bind(this)} >
+                    Add
+                  </Button>
+                </Col> 
+              </Row>
+            </Panel> 
+          </Col>
+        </Row> 
       </Grid>
     )
   }
